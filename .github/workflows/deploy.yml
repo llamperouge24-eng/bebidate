@@ -1,9 +1,9 @@
-name: Deploy static content to Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - main  # Change to 'master' if your default branch is master
+      - main   # Make sure this matches your default branch
 
 permissions:
   contents: read
@@ -14,10 +14,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./   # Keep './' if index.html is at root
+          publish_branch: gh-pages
+          publish_dir: ./   # If your index.html is at root
