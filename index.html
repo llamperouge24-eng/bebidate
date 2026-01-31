@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Bebi 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    overflow: hidden;
+  }
+
+  .box {
+    text-align: center;
+    background: rgba(255,255,255,0.15);
+    padding: 45px;
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+    z-index: 1;
+  }
+
+  h1 {
+    font-size: 2.4rem;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 1.2rem;
+    margin-bottom: 35px;
+  }
+
+  button {
+    padding: 15px 35px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+  }
+
+  /* YES button – soft pulse 💓 */
+  #yes {
+    background: #28d17c;
+    color: white;
+    margin-right: 20px;
+    animation: pulse 1.6s infinite;
+  }
+
+  @keyframes pulse {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.07); }
+    100% { transform: scale(1); }
+  }
+
+  /* NO button */
+  #no {
+    background: #ff4d6d;
+    color: white;
+    position: fixed;
+    left: 60%;
+    top: 65%;
+    transition: left 0.4s ease, top 0.4s ease, transform 0.15s ease;
+  }
+
+  /* Grow slightly on hover 😈 */
+  #no:hover {
+    transform: scale(1.12);
+  }
+
+  /* Shake before running */
+  @keyframes shake {
+    0% { transform: translateX(0) scale(1.12); }
+    25% { transform: translateX(-5px) scale(1.12); }
+    50% { transform: translateX(5px) scale(1.12); }
+    75% { transform: translateX(-5px) scale(1.12); }
+    100% { transform: translateX(0) scale(1.12); }
+  }
+
+  .shake {
+    animation: shake 0.25s;
+  }
+
+  /* Hearts */
+  .heart {
+    position: fixed;
+    font-size: 24px;
+    pointer-events: none;
+    animation: fly 1.5s ease-out forwards;
+  }
+
+  @keyframes fly {
+    from { transform: translate(0,0) scale(1); opacity: 1; }
+    to { transform: translate(var(--x), var(--y)) scale(1.8); opacity: 0; }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h1>Bebi 💕</h1>
+  <p>Patricia, will you go on a date with me?</p>
+
+  <button id="yes">Yes 💖</button>
+  <button id="no">No 🙈</button>
+</div>
+
+<script>
+  const noBtn = document.getElementById("no");
+  const yesBtn = document.getElementById("yes");
+
+  let speed = 420;        // movement duration (ms)
+  let fakePauseUsed = false;
+
+  function moveNoButton() {
+    const margin = 20;
+
+    const minX = margin;
+    const minY = margin;
+    const maxX = window.innerWidth - noBtn.offsetWidth - margin;
+    const maxY = window.innerHeight - noBtn.offsetHeight - margin;
+
+    const x = Math.random() * (maxX - minX) + minX;
+    const y = Math.random() * (maxY - minY) + minY;
+
+    // Shake first
+    noBtn.classList.add("shake");
+
+    setTimeout(() => {
+      noBtn.classList.remove("shake");
+
+      // Fake “almost clicked” pause (only once)
+      if (!fakePauseUsed) {
+        fakePauseUsed = true;
+        setTimeout(() => {
+          noBtn.style.transition = `left ${speed}ms ease, top ${speed}ms ease`;
+          noBtn.style.left = x + "px";
+          noBtn.style.top = y + "px";
+        }, 300);
+      } else {
+        noBtn.style.transition = `left ${speed}ms ease, top ${speed}ms ease`;
+        noBtn.style.left = x + "px";
+        noBtn.style.top = y + "px";
+      }
+
+      // Gradually speed up (never instant)
+      speed = Math.max(120, speed - 30);
+
+    }, 200);
+  }
+
+  // Run forever on hover/touch only
+  noBtn.addEventListener("mouseenter", moveNoButton);
+  noBtn.addEventListener("touchstart", moveNoButton);
+
+  function explodeHearts() {
+    for (let i = 0; i < 30; i++) {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.textContent = "❤️";
+      heart.style.left = "50%";
+      heart.style.top = "50%";
+      heart.style.setProperty("--x", (Math.random() * 400 - 200) + "px");
+      heart.style.setProperty("--y", (Math.random() * 400 - 200) + "px");
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 1500);
+    }
+  }
+
+  yesBtn.addEventListener("click", () => {
+    explodeHearts();
+
+    setTimeout(() => {
+      document.body.innerHTML = `
+        <div style="
+          height:100vh;
+          display:flex;
+          justify-content:center;
+          align-items:center;
+          flex-direction:column;
+          background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+          color:white;
+          font-family:'Segoe UI',sans-serif;
+          text-align:center;
+        ">
+          <h1>Patricia said YES 💖</h1>
+          <p style="font-size:1.5rem;">It’s a date 🥰</p>
+          <p>February 14, 2026</p>
+          <p>— Love, Bebi 😘</p>
+        </div>
+      `;
+    }, 800);
+  });
+</script>
+
+</body>
+</html>
